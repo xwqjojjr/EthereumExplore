@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"><link rel="icon" href="https://static.jianshukeji.com/highcharts/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>home</title>
+        <script src="https://img.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+        <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+</head>
+
+<body>
+
+<div id="container" style="min-width:400px;height:600px"></div>
+<script>
+	var chart  = Highcharts.chart('container', {
+				chart: {
+						zoomType: 'x'
+				},
+				title: {
+						text: '以太坊交易数量变化图'
+				},
+				subtitle: {
+						text: document.ontouchstart === undefined ?
+						'鼠标拖动可以进行缩放' : '手势操作进行缩放'
+				},
+				xAxis: {
+				        categories: {{ X|safe }},
+				        title: {
+								text: '块号'
+						}
+				},
+				yAxis: {
+						title: {
+								text: '交易数'
+						}
+				},
+				legend: {
+						enabled: false
+				},
+				plotOptions: {
+						area: {
+								fillColor: {
+										linearGradient: {
+												x1: 0,
+												y1: 0,
+												x2: 0,
+												y2: 1
+										},
+										stops: [
+												[0, Highcharts.getOptions().colors[0]],
+												[1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+										]
+								},
+								marker: {
+										radius: 1
+								},
+								lineWidth: 1,
+								states: {
+										hover: {
+												lineWidth: 1
+										}
+								},
+								threshold: null
+						}
+				},
+				series: [{
+						type: 'area',
+						name: '交易数量',
+						data: {{ Y }}
+						}]
+		});
+</script>
+<table>
+    <thead>
+    <tr>
+        <th>block_number</th>
+        <th>number</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for tx_block in Tx_Block %}
+        <tr>
+        <td>{{tx_block.block_number}}</td>
+        <td>{{tx_block.number}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
